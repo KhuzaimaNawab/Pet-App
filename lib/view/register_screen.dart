@@ -1,25 +1,31 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_app/view/register_screen.dart';
-import 'package:pet_app/widgets/login_button_widget.dart';
-import 'package:pet_app/widgets/login_textfield_widget.dart';
+import 'package:pet_app/view/login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const routeName = '/login-screen';
+import '../widgets/login_textfield_widget.dart';
 
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  static String routeName = 'regiser-screen';
+
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _pass = TextEditingController();
+  final TextEditingController _fullName = TextEditingController();
+  bool isCheck = false;
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    var sizedBox20 = const SizedBox(
+      height: 20,
+    );
     var sizedBox30 = const SizedBox(
       height: 30,
     );
@@ -27,6 +33,11 @@ class _LoginScreenState extends State<LoginScreen> {
         TextStyle(fontWeight: FontWeight.w200, color: Colors.grey);
     var sizedBox40 = const SizedBox(
       height: 40,
+    );
+    var greyText =
+        const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400);
+    var orangeText = const TextStyle(
+      color: Color(0xFFFD9340),
     );
     return Scaffold(
       body: SafeArea(
@@ -38,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Hello,\nWelcome Back!',
+                  'Create New Account',
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
                 sizedBox30,
@@ -51,6 +62,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      LoginTextField(
+                          label: 'Full Name',
+                          controller: _fullName,
+                          keyboardType: TextInputType.name,
+                          validator: (value) {
+                            final RegExp nameRegExp = RegExp('[a-zA-Z]');
+                            if (!nameRegExp.hasMatch(value!)) {
+                              return 'Enter your name';
+                            }
+                          }),
+                      sizedBox20,
                       LoginTextField(
                         label: 'Email',
                         controller: _email,
@@ -69,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                       ),
-                      sizedBox30,
+                      sizedBox20,
                       LoginTextField(
                         label: 'Password',
                         controller: _pass,
@@ -89,53 +111,65 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                       ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: isCheck,
+                            onChanged: (value) {
+                              setState(() {
+                                isCheck = !isCheck;
+                              });
+                            },
+                          ),
+                          RichText(
+                            textAlign: TextAlign.start,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "I Agree to the ",
+                                  style: greyText,
+                                ),
+                                TextSpan(
+                                  text: 'Terms of Service ',
+                                  style: orangeText,
+                                ),
+                                TextSpan(text: "and\n", style: greyText),
+                                TextSpan(
+                                  text: 'Privacy Policy ',
+                                  style: orangeText,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
                 sizedBox40,
-                Row(
-                  children: [
-                    divider(),
-                    const Text('or', style: lightColorText),
-                    divider(),
-                  ],
+                const SizedBox(
+                  height: 40,
                 ),
-                sizedBox40,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    LoginButton(icon: Icons.facebook, buttonName: '  Google'),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    LoginButton(icon: Icons.facebook, buttonName: '  Facebook'),
-                  ],
-                ),
-                sizedBox40,
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     children: [
-                      const TextSpan(
-                        text: "Don't have an acouunt? ",
-                        style: TextStyle(
-                            color: Colors.grey, fontWeight: FontWeight.w400),
+                      TextSpan(
+                        text: "Have an acoount?",
+                        style: greyText,
                       ),
                       TextSpan(
-                        text: 'Create an Account',
-                        style: const TextStyle(
-                          color: Color(0xFFFD9340),
-                        ),
+                        text: ' Login',
+                        style: orangeText,
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.pushNamed(
-                                context, RegisterScreen.routeName);
+                            Navigator.pushNamed(context, LoginScreen.routeName);
                           },
                       ),
                     ],
                   ),
                 ),
-                sizedBox40,
+                sizedBox30,
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -143,7 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   onPressed: () {
-                    final isValid = _formKey.currentState?.validate();
+                    if (isCheck == false) {
+                      const snackBar = SnackBar(
+                        content: Text('Please check the terms & condition'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      final isValid = _formKey.currentState?.validate();
+                    }
                   },
                   child: const Padding(
                     padding: EdgeInsets.only(top: 20, bottom: 20),
@@ -158,18 +199,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Expanded divider() {
-    return const Expanded(
-      child: Divider(
-        color: Colors.grey,
-        thickness: 0.5,
-        height: 30,
-        indent: 50,
-        endIndent: 50,
       ),
     );
   }

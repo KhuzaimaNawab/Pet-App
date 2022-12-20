@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/view/login_screen.dart';
+import 'package:pet_app/view/register_screen.dart';
 
 import 'view/onboarding_screen.dart';
 
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Pet Application',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: const Color(0xFFFD9340),
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const OnboardingScreen(),
         LoginScreen.routeName: (context) => const LoginScreen(),
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
       },
     );
   }

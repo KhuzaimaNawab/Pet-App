@@ -9,24 +9,34 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {},
-      style: ButtonStyle(
-        elevation: MaterialStateProperty.all(0),
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            side: BorderSide.none,
-          ),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        side: const BorderSide(
+          width: 1,
+          color: Colors.grey,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.all(15),
         child: Row(
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
             Text(
               buttonName,
-              style: const TextStyle(color: Colors.blue),
+              style: const TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
